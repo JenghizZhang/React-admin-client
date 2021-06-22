@@ -1,17 +1,13 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Popconfirm, message } from 'antd';
-import { connect } from 'react-redux'
-
 import { reqWeather, reqLocation } from '../../api'
 import storageUtils from '../../utils/storageUtils'
 import formateDate from '../../utils/dateUtils'
-// import memoryUtils from '../../utils/memoryUtils'
-// import menuList from '../../config/menuConfig'
+import memoryUtils from '../../utils/memoryUtils'
+import menuList from '../../config/menuConfig'
 import LinkButton from '../link-button'
-import { resetUser } from '../../redux/actions'
 import "./index.less"
-
 class Header extends Component {
     state = {
         currentTime: formateDate(Date.now()), //当前时间字符串
@@ -22,7 +18,7 @@ class Header extends Component {
 
     confirm=()=> {
         storageUtils.removeUser();
-        this.props.resetUser()
+        memoryUtils.user={};
         this.props.history.replace('/login')
         message.success('您已退出登录');
     }
@@ -37,21 +33,20 @@ class Header extends Component {
     }
 
     getTitle = ()=>{
-        // //得到当前请求路径
-        // const path=this.props.location.pathname.slice(1);
-        // let title = '';
-        // menuList.forEach(item=>{
-        //     if(item.key===path){
-        //         title=item.title;
-        //     } else if (item.children){
-        //         const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
-        //         if (cItem){
-        //             title=cItem.title;
-        //         }
-        //     }
-        // })
-        // return title;
-        return this.props.headTitle
+        //得到当前请求路径
+        const path=this.props.location.pathname.slice(1);
+        let title = '';
+        menuList.forEach(item=>{
+            if(item.key===path){
+                title=item.title;
+            } else if (item.children){
+                const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
+                if (cItem){
+                    title=cItem.title;
+                }
+            }
+        })
+        return title;
     }
 
     componentDidMount(){
@@ -74,7 +69,7 @@ class Header extends Component {
 
     render() {
         const {currentTime,location,weather, temperature} = this.state
-        const { username } = this.props.user
+        const { username } = memoryUtils.user
         return (
             <div className="header">
                 <div className="header-top">
@@ -102,8 +97,4 @@ class Header extends Component {
         )
     }
 }
-export default connect
-    (
-        state => ({ headTitle: state.headTitle, user: state.user }),
-        { resetUser}
-    )(withRouter(Header))
+export default withRouter(Header)

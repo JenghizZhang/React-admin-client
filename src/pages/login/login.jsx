@@ -2,34 +2,30 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { connect } from 'react-redux'
-
-import { login } from '../../redux/actions'
 import './login.less'
 import logo from '../../assets/imgs/logo.png'
-// import { reqLogin } from '../../api'
-// import memoryUtils from '../../utils/memoryUtils'
-// import storeageUtils from '../../utils/storageUtils'
+import { reqLogin } from '../../api'
+import memoryUtils from '../../utils/memoryUtils'
+import storeageUtils from '../../utils/storageUtils'
 
 
 //登录的路由组件
-class Login extends Component {
+export default class Login extends Component {
     //提交ajax请求
     onFinish = async (values) => {
-        // // 请求登录
-        // const response = await reqLogin(values.username, values.password)
-        // if (response.data.status===1){
-        //     message.error(response.data.msg)
-        // }else{
-        //     memoryUtils.user = response.data.data;//保存到内存中
-        //     storeageUtils.saveUser(response.data.data)//保存到local中
-        //     message.success(`你好${response.data.data.username}~~~`)
-        //     //不需要在回退，所以用replace
-        //     this.props.history.replace('/home')
-        // }  
-        
-        //调用分发异步action的函数=>发异步action请求
-        this.props.login(values.username, values.password)
+        // console.log('提交ajax请求', values);
+        // 请求登录
+        const response = await reqLogin(values.username, values.password)
+        if (response.data.status===1){
+            message.error(response.data.msg)
+            // console.log(response.data.msg)
+        }else{
+            memoryUtils.user = response.data.data;//保存到内存中
+            storeageUtils.saveUser(response.data.data)//保存到local中
+            message.success(`你好${response.data.data.username}~~~`)
+            //不需要在回退，所以用replace
+            this.props.history.replace('/')
+        }       
     };
 
     //对密码进行自定义验证
@@ -44,15 +40,12 @@ class Login extends Component {
 
     render() {
         //判断用户是否登录
-        const user = this.props.user;
-        if (user && user._id ) {
+        const user = memoryUtils.user;
+        if (user && user._id) {
             //自动跳转到登录（在render中）
-            return <Redirect to="/home"></Redirect>
+            return <Redirect to="/"></Redirect>
         }
-        const errorMsg = this.props.user.errorMsg
-        if(errorMsg){
-            message.error(errorMsg)
-        }
+
 
         return (
             <div className="login">
@@ -61,7 +54,6 @@ class Login extends Component {
                     <h1>后台管理系统</h1>
                 </header>
                 <section className="login-content">
-                    <div className={user.errorMsg ? 'error-msg show' : 'error-msg'}>{this.props.user.errorMsg}</div>
                     <h2>用户登录</h2>
                     <Form
                         name="normal_login"
@@ -104,8 +96,3 @@ class Login extends Component {
         )
     }
 }
-
-export default connect(
-    state => ({ user: state.user }),
-    { login }
-)(Login)

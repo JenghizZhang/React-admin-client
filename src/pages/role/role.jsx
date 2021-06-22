@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import { Card, Button, Table, message, Modal } from 'antd'
-import { connect } from 'react-redux'
 
 import AddRole from './add-role'
 import AuthRole from './auth-role'
 import ChangeName from './change-name'
 import LinkButton from '../../components/link-button'
-// import memoryUtils from '../../utils/memoryUtils'
+import memoryUtils from '../../utils/memoryUtils'
 import formateDate from '../../utils/dateUtils'
 import { reqAddRole, reqRoles, reqChangeRoleName, reqUpdateRole } from '../../api'
 import storageUtils from '../../utils/storageUtils'
-import { resetUser } from '../../redux/actions'
 
 //权限管理的路由
-class Role extends Component {
+export default class Role extends Component {
     state = {
         roles: [], //所有角色的列表
         selectedRole: {}, //选中的role
@@ -106,9 +104,7 @@ class Role extends Component {
         this.setState({ visible: 0 });
         let selectedRole = this.state.selectedRole;
         selectedRole.menus = this.authRole.getMenus();
-        // selectedRole.auth_name = memoryUtils.user.username
-        selectedRole.auth_name = this.props.user.username
-
+        selectedRole.auth_name = memoryUtils.user.username
         // console.log(selectedRole)
 
         //请求更新
@@ -116,9 +112,8 @@ class Role extends Component {
         if (data.status === 0) {
 
             //如果当前更新的是自己的角色的权限，强制退出
-            if (selectedRole._id === this.props.user.role_id) {
-                // memoryUtils.user={};
-                this.props.resetUser()
+            if (selectedRole._id === memoryUtils.user.role_id) {
+                memoryUtils.user={};
                 storageUtils.removeUser();
                 this.props.history.replace('/login')
                 message.success('设置角色权限成功啦，改变了当前用户的权限需要重新登录哦~')
@@ -211,8 +206,3 @@ class Role extends Component {
         )
     }
 }
-
-export default connect(
-    state=>({user:state.user}),
-    { resetUser }
-)(Role)
