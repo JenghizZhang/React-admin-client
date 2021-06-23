@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { Card, List } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons'
+import { connect } from 'react-redux'
 
 import LinkButton from '../../components/link-button';
 import { reqCategory } from '../../api'
 import {BASE_IMG_URL} from '../../utils/constants'
+import { setProduct } from '../../redux/actions'
+
 const Item = List.Item;
-export default class Detail extends Component {
+class Detail extends Component {
     state={
         cName1: '',//一级分类名称
         cName2: '',//二级分类名称
@@ -14,7 +17,7 @@ export default class Detail extends Component {
 
     async componentDidMount(){
         //得到当前商品的分类ID
-        const { pCategoryId, categoryId } = this.props.location.state.product
+        const { pCategoryId, categoryId } = this.props.product
         if (pCategoryId==='0'){
             //一级分类下的产品
             const { data } = await reqCategory(categoryId)
@@ -30,9 +33,13 @@ export default class Detail extends Component {
         }
     }
 
+    componentWillUnmount() {
+        this.props.setProduct({})
+    }
+
     render() {
         //读取携带的state数据
-        const { name, desc, price, detail, imgs } = this.props.location.state.product;
+        const { name, desc, price, detail, imgs } = this.props.product;
         
         const title=(
             <span>
@@ -77,3 +84,8 @@ export default class Detail extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({ product: state.product }),
+    { setProduct }
+)(Detail)

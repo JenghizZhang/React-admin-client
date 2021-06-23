@@ -1,7 +1,7 @@
 //包含多个actions creators函数的模块
 //同步action：对象{type: 'XXX', data: 数据值}
 //异步action：函数 dispatch=>{}
-import { SET_HEAD_TITLE, RECEIVE_USER, SHOW_ERROR_MSG, REST_USER } from './action-types'
+import { SET_HEAD_TITLE, RECEIVE_USER, SHOW_ERROR_MSG, REST_USER, SET_PRODUCT } from './action-types'
 import { reqLogin } from '../api'
 import storageUtils from '../utils/storageUtils'
 import { message } from 'antd'
@@ -18,6 +18,9 @@ const showErrorMsg = (errorMsg) => ({ type: SHOW_ERROR_MSG, errorMsg })
 
 //重置user的同步action
 export const resetUser = () => ({ type: REST_USER, user: {} })
+
+//设置product
+export const setProduct = (product) => ({ type: SET_PRODUCT, product })
 
 //登录的异步action
 export const login = (username, password) => {

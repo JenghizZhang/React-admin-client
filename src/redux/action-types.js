@@ -6,3 +6,5 @@ export const RECEIVE_USER='receive_user'
 export const SHOW_ERROR_MSG='show_error_msg'
 //重置user
 export const REST_USER='reset_user'
+//设置product对象
+export const SET_PRODUCT='set_product'

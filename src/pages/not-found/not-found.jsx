@@ -12,7 +12,7 @@ class NotFound extends Component {
         this.props.history.replace('/home')
     }
     render() {
-        this.props.setHeadTitle('')
+        this.props.setHeadTitle('404')
         return (
             <Row className='not-found'>
                 <Col span={12} className='left'></Col>

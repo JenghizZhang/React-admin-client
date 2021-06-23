@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Card, Form, Input, Cascader, Button, message } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons'
+import { connect } from 'react-redux'
 
+import { setProduct } from '../../redux/actions'
 import PicturesWall from './pictures-wall';
 import RichTextEditor from './rich-text-editor'
 import { reqCategories, reqAddOrUpdateProduct } from '../../api'
@@ -11,7 +13,7 @@ const { Item } = Form
 const { TextArea } = Input;
 
 //产品添加更新的子路由
-export default class AddUpdate extends Component {
+class AddUpdate extends Component {
     state = {
         options:[],
     }
@@ -132,9 +134,9 @@ export default class AddUpdate extends Component {
     //取出携带的state
     constructor(props){
         super(props);
-        const product=this.props.location.state
+        const product=this.props.product
         //保存是否为更新的标识
-        this.isUpdate=!!product
+        this.isUpdate=!!product._id
         this.product = product || {}
 
         // console.log(product)
@@ -142,6 +144,10 @@ export default class AddUpdate extends Component {
         //创建用来保存ref标识的标签对象的容器
         this.picturesWall = React.createRef();
         this.richTextEditor = React.createRef();
+    }
+
+    componentWillUnmount(){
+        this.props.setProduct({})
     }
 
     render() {
@@ -205,3 +211,8 @@ export default class AddUpdate extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({ product: state.product }),
+    { setProduct }
+)(AddUpdate)

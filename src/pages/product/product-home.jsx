@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { Card, Select, Input, Button, Table, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux'
 
+import { setProduct } from '../../redux/actions'
 import LinkButton from '../../components/link-button'
 import { reqProducts, reqSearchProducts, reqUpdateStatus } from '../../api'
 import { PAGE_SIZE } from '../../utils/constants'
 
 const Option = Select.Option
 //product默认子路由组件
-export default class ProductHome extends Component {
+class ProductHome extends Component {
     state={
         total:0, //商品的总数量
         product:[], //商品的数组
@@ -69,8 +71,8 @@ export default class ProductHome extends Component {
                 return (
                     <span>
                         {/* 将product对象作为目标路由组件 */}
-                        <LinkButton onClick={()=>this.props.history.push('/product/detail',{product})}>详情</LinkButton>
-                        <LinkButton onClick={() => this.props.history.push('/product/addupdate', product)}>修改</LinkButton>
+                        <LinkButton onClick={() => { this.props.history.push('/product/detail'); this.props.setProduct(product)}}>详情</LinkButton>
+                        <LinkButton onClick={() => { this.props.history.push('/product/addupdate'); this.props.setProduct(product) }}>修改</LinkButton>
                     </span>
                 )
             }
@@ -147,3 +149,8 @@ export default class ProductHome extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({ product: state.product }),
+    { setProduct }
+)(ProductHome)

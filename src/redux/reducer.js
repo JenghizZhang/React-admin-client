@@ -1,7 +1,7 @@
 //用来根据现有的state指定的action生成并返回新的state的纯函数
 import { combineReducers } from 'redux'
 
-import { SET_HEAD_TITLE, RECEIVE_USER, SHOW_ERROR_MSG, REST_USER } from './action-types'
+import { SET_HEAD_TITLE, RECEIVE_USER, SHOW_ERROR_MSG, REST_USER, SET_PRODUCT } from './action-types'
 import storageUtils from '../utils/storageUtils'
 
 //用来管理头部标题的reducer函数
@@ -31,9 +31,20 @@ function user(state = initUser, action) {
     }
 }
 
+//product路由中指定的商品对象
+function product(state = {}, action) {
+    switch (action.type) {
+        case SET_PRODUCT:
+            return action.product;
+        default:
+            return state;
+    }
+}
+
 //向外默认暴露的是合并产生的总的reducer函数
 //管理总的state的结构：{headTitle: '首页', user={XXX}}
 export default combineReducers({
     headTitle,
-    user
+    user,
+    product
 })
