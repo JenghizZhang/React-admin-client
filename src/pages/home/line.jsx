@@ -1,200 +1,80 @@
-import React from "react";
-import {
-    // G2,
-    Chart,
-    Geom,
-    Axis,
-    Tooltip,
-    // Coord,
-    // Label,
-    Legend,
-    // View,
-    Annotation,
-    // Shape,
-    // Facet,
-    // Util,
-    Slider
-} from "bizcharts";
-// import { Button } from "@alifd/next";
+import React, { Component } from 'react'
+import { Card } from 'antd'
+import ReactEcharts from 'echarts-for-react'
 
-export default class Line extends React.Component {
-    render() {
-        const data = [
-            {
-                month: "Jan",
-                city: "China",
-                revenue: 7,
-            },
-            {
-                month: "Jan",
-                city: "Oversea",
-                revenue: 3.9,
-            },
-            {
-                month: "Feb",
-                city: "China",
-                revenue: 6.9,
-            },
-            {
-                month: "Feb",
-                city: "Oversea",
-                revenue: 4.2,
-            },
-            {
-                month: "Mar",
-                city: "China",
-                revenue: 9.5,
-            },
-            {
-                month: "Mar",
-                city: "Oversea",
-                revenue: 5.7,
-            },
-            {
-                month: "Apr",
-                city: "China",
-                revenue: 14.5,
-            },
-            {
-                month: "Apr",
-                city: "Oversea",
-                revenue: 8.5,
-            },
-            {
-                month: "May",
-                city: "China",
-                revenue: 18.4,
-            },
-            {
-                month: "May",
-                city: "Oversea",
-                revenue: 11.9,
-            },
-            {
-                month: "Jun",
-                city: "China",
-                revenue: 21.5,
-            },
-            {
-                month: "Jun",
-                city: "Oversea",
-                revenue: 15.2,
-            },
-            {
-                month: "Jul",
-                city: "China",
-                revenue: 25.2,
-            },
-            {
-                month: "Jul",
-                city: "Oversea",
-                revenue: 17,
-            },
-            {
-                month: "Aug",
-                city: "China",
-                revenue: 26.5,
-            },
-            {
-                month: "Aug",
-                city: "Oversea",
-                revenue: 16.6,
-            },
-            {
-                month: "Sep",
-                city: "China",
-                revenue: 23.3,
-            },
-            {
-                month: "Sep",
-                city: "Oversea",
-                revenue: 14.2,
-            },
-            {
-                month: "Oct",
-                city: "China",
-                revenue: 18.3,
-            },
-            {
-                month: "Oct",
-                city: "Oversea",
-                revenue: 10.3,
-            },
-            {
-                month: "Nov",
-                city: "China",
-                revenue: 13.9,
-            },
-            {
-                month: "Nov",
-                city: "Oversea",
-                revenue: 6.6,
-            },
-            {
-                month: "Dec",
-                city: "China",
-                revenue: 9.6,
-            },
-            {
-                month: "Dec",
-                city: "Oversea",
-                revenue: 4.8,
-            },
-        ];
-        const cols = {
-            month: {
-                range: [0.05, 0.95],
-            },
-            revenue: {
-                min: 0,
-            },
-        };
-        return (
-            <div style={{ padding: "20px", float: 'right', width: '70%', height: 500 }}>
-                <Chart height={500} data={data} scale={cols} autoFit>
-                    <Legend position='top-left' />
-                    < Axis name="month" />
-                    <Axis
-                        name="revenue"
-                        label={{
-                            formatter: (val) => `${val}亿`,
-                        }}
-                    />
-                    < Tooltip
-                        crosshairs={{
-                            type: "y",
-                        }}
-                    />
-                    < Geom type="line" position="month*revenue" size={2} color={"city"} />
-                    <Geom
-                        type="point"
-                        position="month*revenue"
-                        size={4}
-                        shape={"circle"}
-                        color={"city"}
-                        style={{
-                            stroke: "#fff",
-                            lineWidth: 1,
-                        }}
-                    />
-                    {/** https://bizcharts.net/product/BizCharts4/category/62/page/108#text-1 */}
+//图表管理的路由
+export default class Bar extends Component {
 
-                    <Annotation.Text
-                        position={["50%", "50%"]}
-                        content="项目总数\n200"
-                        style={{ fill: 'red' }}
-                    />
-                    <Annotation.DataRegion
-                        start={['Jun', 0]}
-                        end={['Jul', 0]}
-                        region={{ style: { fill: '#eee' } }}
-                        lineLength={0}
-                        text={{ style: { fill: 'green' }, content: 'Annotation.DataRegion' }}
-                    />
-                    <Slider />
-                </Chart>
-            </div>
-        );
+    option = {
+        title: {
+            text: '折线图堆叠'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '邮件营销',
+                type: 'line',
+                stack: '总量',
+                data: [120, 132, 101, 134, 90, 230, 210]
+            },
+            {
+                name: '联盟广告',
+                type: 'line',
+                stack: '总量',
+                data: [220, 182, 191, 234, 290, 330, 310]
+            },
+            {
+                name: '视频广告',
+                type: 'line',
+                stack: '总量',
+                data: [150, 232, 201, 154, 190, 330, 410]
+            },
+            {
+                name: '直接访问',
+                type: 'line',
+                stack: '总量',
+                data: [320, 332, 301, 334, 390, 330, 320]
+            },
+            {
+                name: '搜索引擎',
+                type: 'line',
+                stack: '总量',
+                data: [820, 932, 901, 934, 1290, 1330, 1320]
+            }
+        ]
     }
-}
 
+
+    render() {
+        return (
+            <Card className="home-line">
+                <ReactEcharts option={this.option} style={{ minHeight: '100%' }} />
+            </Card>
+        )
+    }
+
+}
